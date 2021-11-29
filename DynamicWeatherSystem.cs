@@ -24,10 +24,18 @@ public class DynamicWeatherSystem : MonoBehaviour
         RenderSettings.fogDensity=0f;   
     }
 
+    void LoadWeatherSystem()
+    {
+        for(int i=0; i<weatherData.Length; i++)
+        {
+            //weatherData[i]=
+        }
+    }
+
     // Start is called before the first frame update
     void Start() 
     {
-        //5:45
+        LoadWeatherSystem();
     }
 
     // Update is called once per frame
