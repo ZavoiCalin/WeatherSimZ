@@ -56,7 +56,7 @@ public class DynamicWeatherSystem : MonoBehaviour
             case 5:
                 weatherState = WeatherState.Snow;
             default: 
-                Debug.log("Invalid switchWeather "+switchWeather);
+                Debug.Log("Invalid switchWeather "+switchWeather);
         }
     }
 
@@ -81,7 +81,7 @@ public class DynamicWeatherSystem : MonoBehaviour
                 {
                     tmpAudio.volume += Time.deltaTime * weatherData[switchWeather].audioFadeInTimer;
                 }
-                else if(!tmpAudio.volume)
+                else if(tmpAudio.volume==0)
                 {
                     tmpAudio.Stop();
                     tmpAudio.clip=audioClip;
@@ -130,7 +130,7 @@ public class DynamicWeatherSystem : MonoBehaviour
             case WeatherState.Thunder:
                 activateWeather("Thunder");  
             default:
-                Debug.log("Invalid weatherState: "+ weatherState);
+                Debug.Log("Invalid weatherState: "+ weatherState);
         }
     }
 
