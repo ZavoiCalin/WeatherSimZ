@@ -6,7 +6,9 @@ public class WeatherData
 {
     public string name;
 
-    [HideInInspector]
+    public ParticleSystem particleSystem;
+
+    //[HideInInspector]
     public ParticleSystem.EmissionModule emission;
 
     public bool useAudio;
