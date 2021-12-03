@@ -45,18 +45,25 @@ public class DynamicWeatherSystem : MonoBehaviour
         {
             case 0:
                 weatherState = WeatherState.Change;
+                break;
             case 1:
                 weatherState = WeatherState.Sun;
+                break;
             case 2:
                 weatherState = WeatherState.Thunder;
+                break;
             case 3:
                 weatherState = WeatherState.Mist;
+                break;
             case 4:
                 weatherState = WeatherState.Rain;
+                break;
             case 5:
                 weatherState = WeatherState.Snow;
+                break;
             default: 
                 Debug.Log("Invalid switchWeather "+switchWeather);
+                break;
         }
     }
 
@@ -97,6 +104,20 @@ public class DynamicWeatherSystem : MonoBehaviour
         }
     }
 
+    public void ResetWeather()
+    {
+        if(weatherData.Length > 0)
+        {
+            for(int i = 0; i < weatherData.Length; i++)
+            {
+                if(weatherData[i].emission.enabled)
+                {
+                    weatherData[i].emission.enabled = false;
+                }
+            }
+        }
+    }
+
     public void activateWeather(string weather)
     {
         if(weatherData.Length > 0)
@@ -107,7 +128,7 @@ public class DynamicWeatherSystem : MonoBehaviour
                 {
                     weatherData[i].emission.enabled=true;//enable modified
                     weatherData[i].fogColor= RenderSettings.fogColor;
-                    RenderSetting.fogColor= Color.Lerp(weatherData[i].currentForColor, weatherData[i].fogColor, weatherData[i].fogChangeSpeed * Time.deltaTime);
+                    RenderSettings.fogColor= Color.Lerp(weatherData[i].currentForColor, weatherData[i].fogColor, weatherData[i].fogChangeSpeed * Time.deltaTime);
                     changeWeatherSettings(weatherData[i].lightIntensity, weatherData[i].weatherAudio);
                 }
             }
@@ -119,19 +140,28 @@ public class DynamicWeatherSystem : MonoBehaviour
         switch(weatherState){
             case WeatherState.Change:
                 SelectWeather();
+                break;
             case WeatherState.Mist:
                 activateWeather("Mist");
+                break;
             case WeatherState.Sun:
                 activateWeather("Sun");
+                break;
             case WeatherState.Rain:
                 activateWeather("Rain");
+                break;
             case WeatherState.Snow:
                 activateWeather("Snow");
+                break;
             case WeatherState.Thunder:
                 activateWeather("Thunder");  
+                break;
             default:
                 Debug.Log("Invalid weatherState: "+ weatherState);
+                break;
         }
+
+        yield return null;
     }
 
     // Start is called before the first frame update
