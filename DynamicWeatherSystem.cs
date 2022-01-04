@@ -11,6 +11,8 @@ public class DynamicWeatherSystem : MonoBehaviour
     private int switchWeather;
     public float switchTimer=0, resetTimer=3600f, minLightIntensity=0f, maxLightIntensity=1f;
     
+    public Transform windzone;
+
     public AudioSource audioSource;
     public Light sunLight;
     
@@ -137,38 +139,40 @@ public class DynamicWeatherSystem : MonoBehaviour
 
     public IEnumerator StartDynamicWeather()
     {
-        switch(weatherState){
-            case WeatherState.Change:
-                SelectWeather();
-                break;
-            case WeatherState.Mist:
-                activateWeather("Mist");
-                break;
-            case WeatherState.Sun:
-                activateWeather("Sun");
-                break;
-            case WeatherState.Rain:
-                activateWeather("Rain");
-                break;
-            case WeatherState.Snow:
-                activateWeather("Snow");
-                break;
-            case WeatherState.Thunder:
-                activateWeather("Thunder");  
-                break;
-            default:
-                Debug.Log("Invalid weatherState: "+ weatherState);
-                break;
-        }
+        while(true){
+            switch(weatherState){
+                case WeatherState.Change:
+                    SelectWeather();
+                    break;
+                case WeatherState.Mist:
+                    activateWeather("Mist");
+                    break;
+                case WeatherState.Sun:
+                    activateWeather("Sun");
+                    break;
+                case WeatherState.Rain:
+                    activateWeather("Rain");
+                    break;
+                case WeatherState.Snow:
+                    activateWeather("Snow");
+                    break;
+                case WeatherState.Thunder:
+                    activateWeather("Thunder");  
+                    break;
+                default:
+                    Debug.Log("Invalid weatherState: "+ weatherState);
+                    break;
+            }
 
-        yield return null;
+            yield return null;
+        }
     }
 
     // Start is called before the first frame update
     void Start() 
     {
         LoadWeatherSystem();
-        StartCoroutine(nameof(StartDynamicWeather));
+        StartCoroutine(StartDynamicWeather());
     }
 
     // Update is called once per frame
