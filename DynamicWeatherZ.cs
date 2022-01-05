@@ -21,6 +21,10 @@ public class DynamicWeatherZ : MonoBehaviour
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
     private int weatherNum;
     public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
+    public ParticleSystem sunnyClouds;
+    public GameObject sun;
+    //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
+    //destroy(sun);
 
     // Start is called before the first frame update
     void Start()
