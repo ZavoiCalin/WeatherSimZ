@@ -30,7 +30,7 @@ public class NewBehaviourScript : MonoBehaviour
         
     }
 
-    //region
+    //regions
 
     IEnumerator switchWeather(){
         while(true)
@@ -68,7 +68,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     void initializeWeather()
     {
-        
+
     }
 
     void activateWeather(WeatherStates selectedWeather){
