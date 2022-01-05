@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class DynamicWeatherZ : MonoBehaviour
 {
 
     public WeatherStates currentWeatherState; //starea curenta
@@ -20,6 +20,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
     private int weatherNum;
+    public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,7 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        updateTimers();
     }
 
     //regions
@@ -117,6 +118,29 @@ public class NewBehaviourScript : MonoBehaviour
     }
 
     void activateWeather(WeatherStates selectedWeather){
+
+    }
+
+    void updateTimers()
+    {
+        Debug.Log("Updating timers switch value: "+switchWeatherTimer+" reset value: "+resetWeatherTimer);
+        switchWeatherTimer -= Time.deltaTime; //o data per frame se actualizeaza timer-ul pentru ca valoarea float-ului sa corespunda cu numarul de secunde
+        
+        if(switchWeatherTimer < 0)
+        {
+            switchWeatherTimer = 0; //resetarea timer-ului
+        }
+
+        if(switchWeatherTimer > 0)
+            return;
+
+        if(switchWeatherTimer==0)
+        {
+            currentWeatherState=WeatherStates.InitialWeather;
+        }
+
+        switchWeatherTimer=resetWeatherTimer; //se reinitializeaza valoarea 
+
 
     }
 }
