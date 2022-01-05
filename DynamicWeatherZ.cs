@@ -22,9 +22,9 @@ public class DynamicWeatherZ : MonoBehaviour
     private int weatherNum;
     public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
     public ParticleSystem sunnyClouds;
-    public GameObject sun;
+    //public GameObject sun;
     //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
-    //destroy(sun);
+    //Destroy(sun);
 
     // Start is called before the first frame update
     void Start()
