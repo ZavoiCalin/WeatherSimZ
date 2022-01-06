@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DynamicWeatherZ : MonoBehaviour
 {
-
-    public WeatherStates currentWeatherState; //starea curenta
+    
+    public WeatherStates currentWeatherState; //starea curenta _weatherState
 
     public enum WeatherStates{                  //toate starile posibile
         InitialWeather,
@@ -19,17 +19,23 @@ public class DynamicWeatherZ : MonoBehaviour
     };
 
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
-    private int weatherNum;
+    private int weatherNum; //_switchWeather
+
     public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
-    public ParticleSystem sunnyClouds;
-    //public GameObject sun;
+    
+    public ParticleSystem sunnyCloudsParticles, mistParticles, overcastParticles, snowParticles, rainParticles; //_sunCloudsParticleSystem
+    public List<ParticleSystem> weatherParticlesTotal = new List<ParticleSystem>();
+
+    //public GameObject sun, thunder;
     //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
+    //thunder arealight shape = multiple cubes? import from internet? remake in blender?
     //Destroy(sun);
+    //script separat pt sun si thunder
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        addAllParticles();
     }
 
     // Update is called once per frame
@@ -38,9 +44,18 @@ public class DynamicWeatherZ : MonoBehaviour
         updateTimers();
     }
 
+    public void addAllParticles() //adauga toate sistemele de particule in lista
+    {
+        weatherParticlesTotal.Add(sunnyCloudsParticles);
+        weatherParticlesTotal.Add(mistParticles);
+        weatherParticlesTotal.Add(overcastParticles);
+        weatherParticlesTotal.Add(snowParticles);
+        weatherParticlesTotal.Add(rainParticles);
+    }
+
     //regions
 
-    IEnumerator switchWeather(){
+    public IEnumerator switchWeather(){
         while(true)
         {
             switch(currentWeatherState)   //masina cu stari finite in care se alege starea
@@ -84,9 +99,15 @@ public class DynamicWeatherZ : MonoBehaviour
 
     //implementare random
 
-    void initializeWeather()
+    public void initializeWeather()
     {
         weatherNum = Random.Range(0, weatherTotal);
+
+        foreach(ParticleSystem crt in weatherParticlesTotal) //dezactiveaza toate sistemele de particule
+        {
+            var em = crt.emission;
+            em.enabled = false;
+        }
 
         switch(weatherNum)
         {
@@ -121,11 +142,12 @@ public class DynamicWeatherZ : MonoBehaviour
         }
     }
 
-    void activateWeather(WeatherStates selectedWeather){
+    public void activateWeather(WeatherStates selectedWeather)
+    {
 
     }
 
-    void updateTimers()
+    public void updateTimers()
     {
         Debug.Log("Updating timers switch value: "+switchWeatherTimer+" reset value: "+resetWeatherTimer);
         switchWeatherTimer -= Time.deltaTime; //o data per frame se actualizeaza timer-ul pentru ca valoarea float-ului sa corespunda cu numarul de secunde
