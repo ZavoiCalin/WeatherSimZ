@@ -23,15 +23,21 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
     
-    public ParticleSystem sunnyCloudsParticles, mistParticles, overcastParticles, snowParticles, rainParticles; //_sunCloudsParticleSystem
+    public ParticleSystem sunnyCloudsParticles, mistParticles, overcastParticles, snowyParticles, rainyParticles; //_sunCloudsParticleSystem
     public List<ParticleSystem> weatherParticlesTotal = new List<ParticleSystem>();
 
     //public GameObject sun, thunder;
     //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
-    //thunder arealight shape = multiple cubes? import from internet? remake in blender?
+    //thunder = arealight; shape = multiple cubes? import from internet? remake in blender?
     //Destroy(sun);
-    //script separat pt sun si thunder
+    //script separat pt sun si thunder atasate de 
+    //gameObject.active=false
 
+    public float audioFadeTime = 0.25f; //rata de modificare volum audio
+    public AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
+
+    public float lightDimTime = 0.1f, minIntensity = 0f, maxIntensity = 1f, mistIntensity = 0.5f, overcastIntensity = 0.25f, snowIntensity = 0.75f; //rata de modificare a intensitatii luminii
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -49,16 +55,22 @@ public class DynamicWeatherZ : MonoBehaviour
         weatherParticlesTotal.Add(sunnyCloudsParticles);
         weatherParticlesTotal.Add(mistParticles);
         weatherParticlesTotal.Add(overcastParticles);
-        weatherParticlesTotal.Add(snowParticles);
-        weatherParticlesTotal.Add(rainParticles);
+        weatherParticlesTotal.Add(snowyParticles);
+        weatherParticlesTotal.Add(rainyParticles);
+    }
+
+    public void controlEmissions(ParticleSystem ps, bool opt)
+    {
+        var em=ps.emission;
+        em.enabled=opt;
     }
 
     //regions
 
     public IEnumerator switchWeather(){
         while(true)
-        {
-            switch(currentWeatherState)   //masina cu stari finite in care se alege starea
+        {//masina cu stari finite pentru schimbarea vremii
+            switch(currentWeatherState)   
             {
                 case WeatherStates.InitialWeather:
                     initializeWeather();
@@ -101,12 +113,13 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public void initializeWeather()
     {
+        Debug.Log("Initializing weather");
+
         weatherNum = Random.Range(0, weatherTotal);
 
         foreach(ParticleSystem crt in weatherParticlesTotal) //dezactiveaza toate sistemele de particule
         {
-            var em = crt.emission;
-            em.enabled = false;
+            controlEmissions(crt, false);
         }
 
         switch(weatherNum)
@@ -144,12 +157,48 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public void activateWeather(WeatherStates selectedWeather)
     {
+        Debug.Log("Activating "+ selectedWeather);
+
+        //activarea sistemelor de particule adecvate
+        switch(selectedWeather) 
+        {
+            case WeatherStates.SunnyWeather:
+                controlEmissions(sunnyCloudsParticles, true);
+                //activate sun gameObject
+                break;
+
+            case WeatherStates.MistWeather:
+                controlEmissions(mistParticles, true);
+                break;
+
+            case WeatherStates.OvercastWeather:
+                controlEmissions(overcastParticles, true);
+                break;
+
+            case WeatherStates.SnowyWeather:
+                controlEmissions(snowyParticles, true);
+                break;
+
+            case WeatherStates.RainyWeather:
+                controlEmissions(rainyParticles, true);
+                break;
+
+            case WeatherStates.ThunderWeather:
+                controlEmissions(rainyParticles, true);
+                //activate thunder gameObject 
+                break;
+
+            case WeatherStates.OThunderWeather:
+                controlEmissions(overcastParticles, true);
+                //activate thunder gameObject 
+                break;
+        }   
 
     }
 
     public void updateTimers()
     {
-        Debug.Log("Updating timers switch value: "+switchWeatherTimer+" reset value: "+resetWeatherTimer);
+        //Debug.Log("Updating timers switch value: "+switchWeatherTimer+" reset value: "+resetWeatherTimer);
         switchWeatherTimer -= Time.deltaTime; //o data per frame se actualizeaza timer-ul pentru ca valoarea float-ului sa corespunda cu numarul de secunde
         
         if(switchWeatherTimer < 0)
