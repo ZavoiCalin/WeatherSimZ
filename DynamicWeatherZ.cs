@@ -70,9 +70,9 @@ public class DynamicWeatherZ : MonoBehaviour
     {
         float crtLight=GetComponent<Light>().intensity;
 
-        if(crtLight > lvl)
+        if(crtLight > lvl) //reglarea intensitatii luminii curente in functie de nivelul cerut
                 {
-                    crtLight -= Time.deltaTime * lightDimTime;
+                    crtLight -= Time.deltaTime * lightDimTime; //in mod treptat
                 }
                 else if(crtLight < lvl)
                     {
@@ -80,16 +80,27 @@ public class DynamicWeatherZ : MonoBehaviour
                     }
     }
 
+   
     public void setAudioClip(AudioClip clip)
     {
         AudioSource crtAudio=GetComponent<AudioSource>();
 
-        if(crtAudio.volume == 0)
+        if(crtAudio.volume > 0  && crtAudio.clip != clip) //reducerea volumului de la o stare anterioara
+        {
+            crtAudio.volume -= Time.deltaTime * audioFadeTime; //in mod treptat
+        }
+
+        if(crtAudio.volume == 0) //oprirea clipului anterior si setarea clipului adecvat
         {
             crtAudio.Stop();        
             crtAudio.clip = clip;
             crtAudio.loop = true;
             crtAudio.Play();
+        }
+
+        if(crtAudio.volume < 1 && crtAudio.clip == clip) //cresterea volumului starii curente
+        {
+            crtAudio.volume -= Time.deltaTime * audioFadeTime; //in mod treptat
         }
     }
 
@@ -196,11 +207,12 @@ public class DynamicWeatherZ : MonoBehaviour
                 //activate sun gameObject
 
 
-                //setare intensitatii luminii
+                //setarea treptata a intensitatii luminii
                 //in acest caz se doreste obtinerea intensitatii maxime a luminii
                 setLightLevel(maxIntensity);
-                
-                //setarea clipului audio 
+
+                //setarea treptata a volumului provenit de la o stare anterioara si
+                //setarea clipului audio adecvat
                 setAudioClip(sunnyAudio);
 
                 break;
