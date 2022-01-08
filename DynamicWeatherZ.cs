@@ -68,7 +68,7 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public void setLightLevel(float lvl)
     {
-        float crtLight=GetComponent<Light>.intensity;
+        float crtLight=GetComponent<Light>().intensity;
 
         if(crtLight > lvl)
                 {
@@ -84,9 +84,9 @@ public class DynamicWeatherZ : MonoBehaviour
     {
         AudioSource crtAudio=GetComponent<AudioSource>();
 
-        if(!crtAudio.volume)
+        if(crtAudio.volume == 0)
         {
-            crtAudio.Stop();
+            crtAudio.Stop();        
             crtAudio.clip = clip;
             crtAudio.loop = true;
             crtAudio.Play();
