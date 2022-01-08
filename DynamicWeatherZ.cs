@@ -200,7 +200,7 @@ public class DynamicWeatherZ : MonoBehaviour
                 //in acest caz se doreste obtinerea intensitatii maxime a luminii
                 setLightLevel(maxIntensity);
                 
-                //setarea clipului audio
+                //setarea clipului audio 
                 setAudioClip(sunnyAudio);
 
                 break;
