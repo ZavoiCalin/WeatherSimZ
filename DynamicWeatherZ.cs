@@ -40,7 +40,7 @@ public class DynamicWeatherZ : MonoBehaviour
     rainyEmission;
     */
 
-    public List<ParticleSystem.EmissionModule> weatherEmissionsTotal = new List<ParticleSystem.EmissionModule>();
+    //public List<ParticleSystem.EmissionModule> weatherEmissionsTotal = new List<ParticleSystem.EmissionModule>();
 
     /*
     ParticleSystem ps = GetComponent<ParticleSystem>();
@@ -61,6 +61,10 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 1f, mistIntensity = 0.5f, overcastIntensity = 0.25f, snowIntensity = 0.75f; //rata de modificare a intensitatii luminii
                                     //thunderIntensity     sunnyIntensity
+
+    public float fogChangeTime = 0.1f;
+    public Color darkGrey = new Color(0.25f, 0.25f, 0.25f, 1f);
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -258,7 +262,13 @@ public class DynamicWeatherZ : MonoBehaviour
                 break;
 
             case WeatherStates.MistWeather:
+
+                RenderSettings.fogColor = Color.Lerp(Color.grey, darkGrey, Time.deltaTime * fogChangeTime); //interpolarea celor doua intensitati diferite de gri
+                RenderSettings.fog = true;
+                RenderSettings.fogMode = FogMode.ExponentialSquared; //activarea cetii implementate in Unity
+                RenderSettings.fogDensity = 0.1f;
                 
+
                 em=mistParticles.emission;
                 em.enabled=true;
                 setLightLevel(mistIntensity);
