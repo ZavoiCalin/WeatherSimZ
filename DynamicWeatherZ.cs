@@ -1,6 +1,8 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
+[RequireComponent(typeof(AudioSource))]
 
 public class DynamicWeatherZ : MonoBehaviour
 {
@@ -21,10 +23,30 @@ public class DynamicWeatherZ : MonoBehaviour
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
     private int weatherNum; //_switchWeather
 
-    public float switchWeatherTimer=0f, resetWeatherTimer=20f; //timere de schimbare
+    public float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
-    public ParticleSystem sunnyCloudsParticles, mistParticles, overcastParticles, snowyParticles, rainyParticles; //_sunCloudsParticleSystem
+    public ParticleSystem sunnyCloudsParticles, 
+    mistParticles,
+    overcastParticles, 
+    snowyParticles, 
+    rainyParticles; 
     public List<ParticleSystem> weatherParticlesTotal = new List<ParticleSystem>();
+
+    /* emission problems
+    private ParticleSystem.EmissionModule sunnyCloudsEmission, 
+    mistEmission, 
+    overcastEmission, 
+    snowyEmission, 
+    rainyEmission;
+    */
+
+    public List<ParticleSystem.EmissionModule> weatherEmissionsTotal = new List<ParticleSystem.EmissionModule>();
+
+    /*
+    ParticleSystem ps = GetComponent<ParticleSystem>();
+        var em = ps.emission;
+        em.enabled = true;
+    */
 
     //public GameObject sun, thunder;
     //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
@@ -43,6 +65,18 @@ public class DynamicWeatherZ : MonoBehaviour
     void Start()
     {
         addAllParticles();
+        
+        /*emission problems
+        addAllEmissions();
+
+        sunnyCloudsEmission=sunnyCloudsParticles.emission; //asignarile emisiilor se pot face doar in metoda Start() deoarece sunt intefete si nu pot fi referite de obiecte 
+        mistEmission=mistParticles.emission;
+        overcastEmission=overcastParticles.emission;
+        snowyEmission=snowyParticles.emission;
+        rainyEmission=rainyParticles.emission;
+        */
+
+        StartCoroutine(switchWeather());
     }
 
     // Update is called once per frame
@@ -60,11 +94,16 @@ public class DynamicWeatherZ : MonoBehaviour
         weatherParticlesTotal.Add(rainyParticles);
     }
 
-    public void controlEmissions(ParticleSystem ps, bool opt)
+    /* emission problems
+    public void addAllEmissions()
     {
-        var em=ps.emission;
-        em.enabled=opt;
+        weatherEmissionsTotal.Add(sunnyCloudsEmission);
+        weatherEmissionsTotal.Add(mistEmission);
+        weatherEmissionsTotal.Add(overcastEmission);
+        weatherEmissionsTotal.Add(snowyEmission);
+        weatherEmissionsTotal.Add(rainyEmission);
     }
+    */
 
     public void setLightLevel(float lvl)
     {
@@ -158,7 +197,8 @@ public class DynamicWeatherZ : MonoBehaviour
 
         foreach(ParticleSystem crt in weatherParticlesTotal) //dezactiveaza toate sistemele de particule
         {
-            controlEmissions(crt, false);
+            var em = crt.emission;
+            em.enabled=false;
         }
 
         switch(weatherNum)
@@ -198,12 +238,12 @@ public class DynamicWeatherZ : MonoBehaviour
     {
         Debug.Log("Activating "+ selectedWeather);
 
-
-        //activarea sistemelor de particule adecvate
         switch(selectedWeather) 
         {
             case WeatherStates.SunnyWeather:
-                controlEmissions(sunnyCloudsParticles, true);
+                
+                var em=sunnyCloudsParticles.emission; //activarea emisiilor sistemelor de particule adecvate
+                em.enabled=true;
                 //activate sun gameObject
 
 
@@ -218,40 +258,52 @@ public class DynamicWeatherZ : MonoBehaviour
                 break;
 
             case WeatherStates.MistWeather:
-                controlEmissions(mistParticles, true);
+                
+                em=mistParticles.emission;
+                em.enabled=true;
                 setLightLevel(mistIntensity);
                 setAudioClip(mistAudio);
                 break;
 
             case WeatherStates.OvercastWeather:
-                controlEmissions(overcastParticles, true);
+
+                em=overcastParticles.emission;
+                em.enabled=true;
                 //activate overcast clouds
                 setLightLevel(overcastIntensity);
                 setAudioClip(overcastAudio);
                 break;
 
             case WeatherStates.SnowyWeather:
-                controlEmissions(snowyParticles, true);
+                
+                em=snowyParticles.emission;
+                em.enabled=true;
                 setLightLevel(snowIntensity);
                 setAudioClip(snowyAudio);
                 break;
 
             case WeatherStates.RainyWeather:
-                controlEmissions(rainyParticles, true);
+
+                em=rainyParticles.emission;
+                em.enabled=true;
                 //activate overcast clouds
                 setLightLevel(minIntensity);
                 setAudioClip(rainyAudio);
                 break;
 
             case WeatherStates.ThunderWeather:
-                controlEmissions(rainyParticles, true);
+               
+                em=rainyParticles.emission;
+                em.enabled=true;
                 //activate thunder gameObject 
                 setLightLevel(minIntensity);
                 setAudioClip(thunderAudio);
                 break;
 
             case WeatherStates.OThunderWeather:
-                controlEmissions(overcastParticles, true);
+                
+                em=overcastParticles.emission;
+                em.enabled=true;
                 //controlEmissions(rainyParticles, false);
                 //activate thunder gameObject
                 //activate overcast clouds
