@@ -22,6 +22,13 @@ public class ReadData : MonoBehaviour
                 listA.Add(values[0]);
             }
         }
+
+        /*
+        foreach(var crt in listA)
+        {
+            Debug.log(crt);
+        }
+        */
     }
     
 

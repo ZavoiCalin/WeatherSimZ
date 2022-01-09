@@ -23,6 +23,8 @@ public class DynamicWeatherZ : MonoBehaviour
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
     private int weatherNum; //_switchWeather
 
+    private Transform systemPosition;
+
     public float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
     public ParticleSystem sunnyCloudsParticles, 
@@ -68,6 +70,9 @@ public class DynamicWeatherZ : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject system = GameObject.FindGameObjectWithTag("System");
+        systemPosition = system.transform;
+
         addAllParticles();
         
         /*emission problems
@@ -266,7 +271,7 @@ public class DynamicWeatherZ : MonoBehaviour
                 RenderSettings.fogColor = Color.Lerp(Color.grey, darkGrey, Time.deltaTime * fogChangeTime); //interpolarea celor doua intensitati diferite de gri
                 RenderSettings.fog = true;
                 RenderSettings.fogMode = FogMode.ExponentialSquared; //activarea cetii implementate in Unity
-                RenderSettings.fogDensity = 0.1f;
+                RenderSettings.fogDensity = 0.05f;
                 
 
                 em=mistParticles.emission;
