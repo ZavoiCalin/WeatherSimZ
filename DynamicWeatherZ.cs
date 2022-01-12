@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Light))]
 
 public class DynamicWeatherZ : MonoBehaviour
 {
@@ -236,30 +237,37 @@ public class ExampleClass : MonoBehaviour
         {
             case 0:
                 weatherNum = (int)WeatherStates.SunnyWeather;
+                currentWeatherState=WeatherStates.SunnyWeather;
                 break;
 
             case 1:
                 weatherNum = (int)WeatherStates.MistWeather;
+                currentWeatherState=WeatherStates.MistWeather;
                 break;
 
             case 2:
                 weatherNum = (int)WeatherStates.OvercastWeather;
+                currentWeatherState=WeatherStates.OvercastWeather;
                 break;
 
             case 3:
                 weatherNum = (int)WeatherStates.SnowyWeather;
+                currentWeatherState=WeatherStates.SnowyWeather;
                 break;
 
             case 4:
                 weatherNum = (int)WeatherStates.RainyWeather;
+                currentWeatherState=WeatherStates.RainyWeather;
                 break;
 
             case 5:
                 weatherNum = (int)WeatherStates.ThunderWeather;
+                currentWeatherState=WeatherStates.ThunderWeather;
                 break;
 
             case 6:
                 weatherNum = (int)WeatherStates.OThunderWeather;
+                currentWeatherState=WeatherStates.OThunderWeather;
                 break;
         
         }
