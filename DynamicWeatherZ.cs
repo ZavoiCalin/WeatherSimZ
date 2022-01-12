@@ -53,11 +53,11 @@ public class DynamicWeatherZ : MonoBehaviour
     */
 
     //public GameObject sun, thunder;
-    //sun = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
+    //sun = GameObject.FindWithTag("Sun"); 
     //thunder = arealight; shape = multiple cubes? import from internet? remake in blender?
     //Destroy(sun);
     //script separat pt sun si thunder atasate de 
-    //gameObject.active=false
+    //sun.SetActive(false);
     //overcast clouds care au colider si dispar cand ies din viziunea main camera
 
     public float audioFadeTime = 0.25f; //rata de modificare volum audio
@@ -233,6 +233,9 @@ public class ExampleClass : MonoBehaviour
             em.enabled=false;
         }
 
+        //sun.SetActive(false);
+        //thunder.SetActive(false);
+
         switch(weatherNum)
         {
             case 0:
@@ -285,6 +288,7 @@ public class ExampleClass : MonoBehaviour
                 em.enabled=true;
                 //activate sun gameObject
 
+                //sun.SetActive(true);
 
                 //setarea treptata a intensitatii luminii
                 //in acest caz se doreste obtinerea intensitatii maxime a luminii
@@ -341,6 +345,7 @@ public class ExampleClass : MonoBehaviour
                 em=rainyParticles.emission;
                 em.enabled=true;
                 //activate thunder gameObject 
+                //thunder.SetActive(true);
                 setLightLevel(minIntensity);
                 setAudioClip(thunderAudio);
                 break;
@@ -351,6 +356,7 @@ public class ExampleClass : MonoBehaviour
                 em.enabled=true;
                 //controlEmissions(rainyParticles, false);
                 //activate thunder gameObject
+                //thunder.SetActive(true);
                 //activate overcast clouds
                 setLightLevel(minIntensity);
                 setAudioClip(thunderAudio);
@@ -382,3 +388,34 @@ public class ExampleClass : MonoBehaviour
 
     }
 }
+
+//Idee setare texturi 
+/* 
+private float[,,] alphaData;
+    private TerrainData tData;
+    private float percentage;
+   
+    private const int DESERT    = 0; //These numbers depend on the order in which
+    private const int GRASS     = 1; //the textures are loaded onto the terrain
+   
+    void Start() {
+        tData = Terrain.activeTerrain.terrainData;
+       
+        alphaData = tData.GetAlphamaps(0, 0, tData.alphamapWidth, tData.alphamapHeight);
+       
+        SetPercentage(0);
+    }
+   
+    public void SetPercentage(double perc){
+        percentage = (float) perc /100f;
+       
+        for(int y=0; y<tData.alphamapHeight; y++){
+            for(int x = 0; x < tData.alphamapWidth; x++){
+                alphaData[x, y, DESERT] = 1 - percentage;
+                alphaData[x, y, GRASS] = percentage;
+            }
+        }
+       
+        tData.SetAlphamaps(0, 0, alphaData);
+    }
+    */
