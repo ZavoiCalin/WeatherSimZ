@@ -27,12 +27,13 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
+    
     public ParticleSystem sunnyCloudsParticles, 
     mistParticles,
     overcastParticles, 
     snowyParticles, 
     rainyParticles; 
-    public List<ParticleSystem> weatherParticlesTotal = new List<ParticleSystem>();
+    public ParticleSystem [] weatherParticlesTotal;
 
     /* emission problems
     private ParticleSystem.EmissionModule sunnyCloudsEmission, 
@@ -94,13 +95,34 @@ public class DynamicWeatherZ : MonoBehaviour
         updateTimers();
     }
 
+    // Instantiates respawnPrefab at the location
+// of all game objects tagged "Respawn".
+
+/*
+public class ExampleClass : MonoBehaviour
+{
+    public GameObject respawnPrefab;
+    public GameObject[] respawns;
+    void Start()
+    {
+        if (respawns == null)
+            respawns = GameObject.FindGameObjectsWithTag("Respawn");
+
+        foreach (GameObject respawn in respawns)
+        {
+            Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
+        }
+    }
+}
+*/
     public void addAllParticles() //adauga toate sistemele de particule in lista
     {
-        weatherParticlesTotal.Add(sunnyCloudsParticles);
-        weatherParticlesTotal.Add(mistParticles);
-        weatherParticlesTotal.Add(overcastParticles);
-        weatherParticlesTotal.Add(snowyParticles);
-        weatherParticlesTotal.Add(rainyParticles);
+        if(weatherParticlesTotal == null)
+        {
+            weatherParticlesTotal = gameObject.GetComponents<ParticleSystem>();
+        }
+        
+        
     }
 
     /* emission problems
