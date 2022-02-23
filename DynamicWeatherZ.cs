@@ -52,6 +52,7 @@ public class DynamicWeatherZ : MonoBehaviour
         em.enabled = true;
     */
 
+    //SUN+THUNDER REZOLV CU SCRIPTABLE OBJECTS
     //public GameObject sun, thunder;
     //sun = GameObject.FindWithTag("Sun"); 
     //thunder = arealight; shape = multiple cubes? import from internet? remake in blender?
@@ -419,3 +420,4 @@ private float[,,] alphaData;
         tData.SetAlphamaps(0, 0, alphaData);
     }
     */
+    
