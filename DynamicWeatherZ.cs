@@ -7,7 +7,8 @@ using System.Collections.Generic;
 
 public class DynamicWeatherZ : MonoBehaviour
 {
-    
+    #region fields
+
     public WeatherStates currentWeatherState; //starea curenta _weatherState
 
     public enum WeatherStates{                  //toate starile posibile
@@ -71,6 +72,8 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public float fogChangeTime = 0.1f;
     public Color darkGrey = new Color(0.25f, 0.25f, 0.25f, 1f);
+
+    #endregion
     
     // Start is called before the first frame update
     void Start()
@@ -224,6 +227,8 @@ public class ExampleClass : MonoBehaviour
 
     //implementare random
 
+    #region initializare_random
+
     public void initializeWeather()
     {
         Debug.Log("Initializing weather");
@@ -277,6 +282,10 @@ public class ExampleClass : MonoBehaviour
         
         }
     }
+
+    #endregion
+
+    #region activare
 
     public void activateWeather(WeatherStates selectedWeather)
     {
@@ -364,6 +373,10 @@ public class ExampleClass : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region timer
+
     public void updateTimers()
     {
         //Debug.Log("Updating timers switch value: "+switchWeatherTimer+" reset value: "+resetWeatherTimer);
@@ -387,6 +400,8 @@ public class ExampleClass : MonoBehaviour
 
     }
 }
+
+#endregion
 
 //Idee setare texturi sol
 /* 
