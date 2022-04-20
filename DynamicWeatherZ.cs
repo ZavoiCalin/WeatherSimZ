@@ -205,7 +205,7 @@ public class ExampleClass : MonoBehaviour
                     break;
 
                 case WeatherStates.SnowyWeather:
-                    activateWeather(WeatherStates.RainyWeather);
+                    activateWeather(WeatherStates.SnowyWeather);
                     break;
 
                 case WeatherStates.RainyWeather:
