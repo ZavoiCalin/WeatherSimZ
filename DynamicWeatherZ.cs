@@ -177,7 +177,7 @@ public class ExampleClass : MonoBehaviour
 
         if(crtAudio.volume < 1 && crtAudio.clip == clip) //cresterea volumului starii curente
         {
-            crtAudio.volume -= Time.deltaTime * audioFadeTime; //in mod treptat
+            crtAudio.volume += Time.deltaTime * audioFadeTime; //in mod treptat
         }
     }
 

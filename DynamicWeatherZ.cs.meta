@@ -9,6 +9,8 @@ MonoImporter:
   - overcastParticles: {instanceID: 0}
   - snowyParticles: {instanceID: 0}
   - rainyParticles: {instanceID: 0}
+  - sun: {fileID: 2069022959619003049, guid: 2101bc5c5456e7b41a9cd465fd62c45b, type: 3}
+  - thunder: {fileID: 7357519607875787021, guid: 4c40445cff2d1e2488e9c99cfeb8c407, type: 3}
   - sunnyAudio: {fileID: 8300000, guid: 0130a20eebc5cc749a8442c474d1c45b, type: 3}
   - mistAudio: {fileID: 8300000, guid: 0029c9bfcef599440b87276141e0db55, type: 3}
   - overcastAudio: {fileID: 8300000, guid: 97f60e96d95682a4cadf3e5a03b6c29c, type: 3}
