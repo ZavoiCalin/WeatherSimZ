@@ -15,7 +15,7 @@ public class Mouse_Look : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * effectiveSpeed;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 15f);
+        xRotation = Mathf.Clamp(xRotation, -90f, 15f); //rotatia pe axa este blocata pentru a nu se putea vedea in interiorul personajului
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
@@ -25,7 +25,7 @@ public class Mouse_Look : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked; 
     }
 
     // Update is called once per frame

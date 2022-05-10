@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
-    public CharacterController controller;
-    public float speed = 120f;
+    public CharacterController controller; 
+    public float speed = 120f; 
 
     public void calculateMovement()
     {
