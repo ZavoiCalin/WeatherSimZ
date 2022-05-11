@@ -30,12 +30,12 @@ public class DynamicWeatherZ : MonoBehaviour
     public float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
     
-    public ParticleSystem sunnyCloudsParticles, 
+    public GameObject sunnyCloudsParticles, 
     mistParticles,
     overcastParticles, 
     snowyParticles, 
     rainyParticles; 
-    public ParticleSystem [] weatherParticlesTotal;
+    public GameObject [] weatherParticlesTotal;
 
     public GameObject sun, thunder;
 
@@ -126,10 +126,8 @@ public class ExampleClass : MonoBehaviour
     {
         if(weatherParticlesTotal == null)
         {
-            weatherParticlesTotal = gameObject.GetComponents<ParticleSystem>();
+            weatherParticlesTotal = GameObject.FindGameObjectsWithTag("Particles");
         }
-        
-        
     }
 
     /* emission problems
@@ -235,9 +233,9 @@ public class ExampleClass : MonoBehaviour
 
         weatherNum = Random.Range(0, weatherTotal);
 
-        foreach(ParticleSystem crt in weatherParticlesTotal) //dezactiveaza toate particulele
+        foreach(GameObject crt in weatherParticlesTotal) //dezactiveaza toate particulele
         {
-            crt.Stop();
+            crt.SetActive(false);
         }
 
         sun.SetActive(false); ////dezactiveaza toate gameobject-urile
@@ -291,13 +289,15 @@ public class ExampleClass : MonoBehaviour
     {
         Debug.Log("Activating "+ selectedWeather);
 
+        //weatherParticlesTotal[weatherNum].Play(); cand era lista de ParticlesSystem
+
         switch(selectedWeather) 
         {
             case WeatherStates.SunnyWeather:
 
                 sun.SetActive(true); //activarea gameobject-ului 
                 
-                sunnyCloudsParticles.Play(); //activarea sistemelor de particule adecvate
+                sunnyCloudsParticles.SetActive(true); //activarea sistemelor de particule adecvate
                 //activate sun gameObject
 
                 //sun.SetActive(true);
@@ -320,14 +320,14 @@ public class ExampleClass : MonoBehaviour
                 RenderSettings.fogDensity = 0.05f;
                 
 
-                mistParticles.Play();
+                mistParticles.SetActive(true);
                 setLightLevel(mistIntensity);
                 setAudioClip(mistAudio);
                 break;
 
             case WeatherStates.OvercastWeather:
 
-                overcastParticles.Play();
+                overcastParticles.SetActive(true);
                 //activate overcast clouds
                 setLightLevel(overcastIntensity);
                 setAudioClip(overcastAudio);
@@ -335,14 +335,14 @@ public class ExampleClass : MonoBehaviour
 
             case WeatherStates.SnowyWeather:
                 
-                snowyParticles.Play();
+                snowyParticles.SetActive(true);
                 setLightLevel(snowIntensity);
                 setAudioClip(snowyAudio);
                 break;
 
             case WeatherStates.RainyWeather:
 
-                rainyParticles.Play();
+                rainyParticles.SetActive(true);
                 //activate overcast clouds
                 setLightLevel(minIntensity);
                 setAudioClip(rainyAudio);
@@ -350,7 +350,7 @@ public class ExampleClass : MonoBehaviour
 
             case WeatherStates.ThunderWeather:
                
-                rainyParticles.Play();
+                rainyParticles.SetActive(true);
                 thunder.SetActive(true);
                 //activate thunder gameObject 
                 //thunder.SetActive(true);
@@ -360,7 +360,7 @@ public class ExampleClass : MonoBehaviour
 
             case WeatherStates.OThunderWeather:
                 
-                overcastParticles.Play();
+                overcastParticles.SetActive(true);
                 thunder.SetActive(true);
                 //controlEmissions(rainyParticles, false);
                 //activate thunder gameObject

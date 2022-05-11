@@ -15,7 +15,7 @@ MonoImporter:
   - mistAudio: {fileID: 8300000, guid: 0029c9bfcef599440b87276141e0db55, type: 3}
   - overcastAudio: {fileID: 8300000, guid: 97f60e96d95682a4cadf3e5a03b6c29c, type: 3}
   - snowyAudio: {fileID: 8300000, guid: d0cf8f2cbbac225489401ce2706f1716, type: 3}
-  - rainyAudio: {fileID: 8300000, guid: d8eb09dc9ceefe746a8e682ea9c76a87, type: 3}
+  - rainyAudio: {fileID: 8300000, guid: 3a9e52985b9e3c54c9979718b76095ac, type: 3}
   - thunderAudio: {fileID: 8300000, guid: 0639227310eb91a418dffe9f4a103349, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
