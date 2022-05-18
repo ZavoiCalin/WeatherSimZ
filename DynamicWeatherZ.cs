@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(Light))]
+//[RequireComponent(typeof(Light))]
 
 public class DynamicWeatherZ : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public GameObject sun, thunder;
 
+    public Light crtLight;
+
     /* emission problems
     private ParticleSystem.EmissionModule sunnyCloudsEmission, 
     mistEmission, 
@@ -67,7 +70,7 @@ public class DynamicWeatherZ : MonoBehaviour
     public float audioFadeTime = 0.25f; //rata de modificare volum audio
     public AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
 
-    public float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 1f, mistIntensity = 0.5f, overcastIntensity = 0.25f, snowIntensity = 0.75f; //rata de modificare a intensitatii luminii
+    public float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 5f, mistIntensity = 2f, overcastIntensity = 1f, snowIntensity = 3f; //rata de modificare a intensitatii luminii
                                     //thunderIntensity     sunnyIntensity
 
     public float fogChangeTime = 0.1f;
@@ -143,15 +146,17 @@ public class ExampleClass : MonoBehaviour
 
     public void setLightLevel(float lvl)
     {
-        float crtLight=GetComponent<Light>().intensity;
+        //Light crtLight = GetComponent<Light>();
 
-        if(crtLight > lvl) //reglarea intensitatii luminii curente in functie de nivelul cerut
+        float crtLvl = crtLight.intensity;
+
+        if(crtLvl > lvl) //reglarea intensitatii luminii curente in functie de nivelul cerut
                 {
-                    crtLight -= Time.deltaTime * lightDimTime; //in mod treptat
+                    crtLvl -= Time.deltaTime * lightDimTime; //in mod treptat
                 }
-                else if(crtLight < lvl)
+                else if(crtLvl < lvl)
                     {
-                        crtLight += Time.deltaTime * lightDimTime;
+                        crtLvl += Time.deltaTime * lightDimTime;
                     }
     }
 
@@ -240,6 +245,8 @@ public class ExampleClass : MonoBehaviour
 
         sun.SetActive(false); ////dezactiveaza toate gameobject-urile
         thunder.SetActive(false);
+
+        setLightLevel(minIntensity);
 
         switch(weatherNum)
         {
