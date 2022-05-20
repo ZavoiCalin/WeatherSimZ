@@ -42,6 +42,10 @@ public class DynamicWeatherZ : MonoBehaviour
 
     public Light crtLight;
 
+    public Terrain crtTerrain;
+
+    public Material crtMaterial;
+
     /* emission problems
     private ParticleSystem.EmissionModule sunnyCloudsEmission, 
     mistEmission, 
@@ -302,6 +306,8 @@ public class ExampleClass : MonoBehaviour
         {
             case WeatherStates.SunnyWeather:
 
+                crtTerrain.materialTemplate = crtMaterial;
+                
                 sun.SetActive(true); //activarea gameobject-ului 
                 
                 sunnyCloudsParticles.SetActive(true); //activarea sistemelor de particule adecvate
