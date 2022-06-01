@@ -28,23 +28,25 @@ public class DynamicWeatherZ : MonoBehaviour
 
     private Transform systemPosition;
 
-    public float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
+    [SerializeField] private float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
     
-    public GameObject sunnyCloudsParticles, 
+    [SerializeField] private GameObject sunnyCloudsParticles, 
     mistParticles,
     overcastParticles, 
     snowyParticles, 
     rainyParticles; 
-    public GameObject [] weatherParticlesTotal;
+    [SerializeField] private GameObject [] weatherParticlesTotal;
 
-    public GameObject sun, thunder;
+    [SerializeField] private GameObject sun, thunder, player, origin;
 
-    public Light crtLight;
+    [SerializeField] private Light crtLight;
 
-    public Terrain crtTerrain;
+    [SerializeField] private Terrain crtTerrain;
 
-    public Material crtMaterial;
+    [SerializeField] private Material crtMaterial;
+
+    
 
     /* emission problems
     private ParticleSystem.EmissionModule sunnyCloudsEmission, 
@@ -71,14 +73,14 @@ public class DynamicWeatherZ : MonoBehaviour
     //sun.SetActive(false);
     //overcast clouds care au colider si dispar cand ies din viziunea main camera
 
-    public float audioFadeTime = 0.25f; //rata de modificare volum audio
-    public AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
+    [SerializeField] private float audioFadeTime = 0.25f; //rata de modificare volum audio
+    [SerializeField] private AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
 
-    public float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 5f, mistIntensity = 2f, overcastIntensity = 1f, snowIntensity = 3f; //rata de modificare a intensitatii luminii
+    [SerializeField] private float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 5f, mistIntensity = 2f, overcastIntensity = 1f, snowIntensity = 3f; //rata de modificare a intensitatii luminii
                                     //thunderIntensity     sunnyIntensity
 
-    public float fogChangeTime = 0.1f;
-    public Color darkGrey = new Color(0.25f, 0.25f, 0.25f, 1f);
+    [SerializeField] private float fogChangeTime = 0.1f;
+    [SerializeField] private Color darkGrey = new Color(0.25f, 0.25f, 0.25f, 1f);
 
     #endregion
     
@@ -107,6 +109,8 @@ public class DynamicWeatherZ : MonoBehaviour
     void Update()
     {
         updateTimers();
+
+        origin.transform.position = new Vector3(player.transform.position.x + 300f, player.transform.position.y + 300f, player.transform.position.z + 300f);
     }
 
     // Instantiates respawnPrefab at the location
@@ -135,6 +139,12 @@ public class ExampleClass : MonoBehaviour
         {
             weatherParticlesTotal = GameObject.FindGameObjectsWithTag("Particles");
         }
+    }
+
+    public void updateOrigin()
+    {
+        bool moved = player.transform.hasChanged;
+        
     }
 
     /* emission problems
