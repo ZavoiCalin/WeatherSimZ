@@ -38,42 +38,15 @@ public class DynamicWeatherZ : MonoBehaviour
     rainyParticles; 
     [SerializeField] private GameObject [] weatherParticlesTotal;
 
-    [SerializeField] private GameObject sun, thunder, player, origin;
+    [SerializeField] private GameObject sun, thunder, player;
 
     [SerializeField] private Light crtLight;
 
     [SerializeField] private Terrain crtTerrain;
 
-    [SerializeField] private Material crtMaterial;
+    [SerializeField] private Material crtMaterial, SkyboxSunny, SkyboxMist, SkyboxOvercast, SkyboxSnowy, SkyboxRainy, SkyboxThunder;
 
-    
-
-    /* emission problems
-    private ParticleSystem.EmissionModule sunnyCloudsEmission, 
-    mistEmission, 
-    overcastEmission, 
-    snowyEmission, 
-    rainyEmission;
-    */
-
-    //public List<ParticleSystem.EmissionModule> weatherEmissionsTotal = new List<ParticleSystem.EmissionModule>();
-
-    /*
-    ParticleSystem ps = GetComponent<ParticleSystem>();
-        var em = ps.emission;
-        em.enabled = true;
-    */
-
-    //SUN+THUNDER REZOLV CU SCRIPTABLE OBJECTS
-    //public GameObject sun, thunder;
-    //sun = GameObject.FindWithTag("Sun"); 
-    //thunder = arealight; shape = multiple cubes? import from internet? remake in blender?
-    //Destroy(sun);
-    //script separat pt sun si thunder atasate de 
-    //sun.SetActive(false);
-    //overcast clouds care au colider si dispar cand ies din viziunea main camera
-
-    [SerializeField] private float audioFadeTime = 0.25f; //rata de modificare volum audio
+    [SerializeField] private float audioFadeTime = 0.5f; //rata de modificare volum audio
     [SerializeField] private AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
 
     [SerializeField] private float lightDimTime = 0.1f, minIntensity = 0.1f, maxIntensity = 5f, mistIntensity = 2f, overcastIntensity = 1f, snowIntensity = 3f; //rata de modificare a intensitatii luminii
@@ -91,16 +64,6 @@ public class DynamicWeatherZ : MonoBehaviour
         systemPosition = system.transform;
 
         addAllParticles();
-        
-        /*emission problems
-        addAllEmissions();
-
-        sunnyCloudsEmission=sunnyCloudsParticles.emission; //asignarile emisiilor se pot face doar in metoda Start() deoarece sunt intefete si nu pot fi referite de obiecte 
-        mistEmission=mistParticles.emission;
-        overcastEmission=overcastParticles.emission;
-        snowyEmission=snowyParticles.emission;
-        rainyEmission=rainyParticles.emission;
-        */
 
         StartCoroutine(switchWeather());
     }
@@ -108,9 +71,10 @@ public class DynamicWeatherZ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         updateTimers();
 
-        origin.transform.position = new Vector3(player.transform.position.x + 300f, player.transform.position.y + 300f, player.transform.position.z + 300f);
+        //origin.transform.position = new Vector3(player.transform.position.x + 300f, player.transform.position.y + 300f, player.transform.position.z + 300f);
     }
 
     // Instantiates respawnPrefab at the location
@@ -141,21 +105,14 @@ public class ExampleClass : MonoBehaviour
         }
     }
 
+
+    /*
     public void updateOrigin()
     {
         bool moved = player.transform.hasChanged;
         
     }
 
-    /* emission problems
-    public void addAllEmissions()
-    {
-        weatherEmissionsTotal.Add(sunnyCloudsEmission);
-        weatherEmissionsTotal.Add(mistEmission);
-        weatherEmissionsTotal.Add(overcastEmission);
-        weatherEmissionsTotal.Add(snowyEmission);
-        weatherEmissionsTotal.Add(rainyEmission);
-    }
     */
 
     public void setLightLevel(float lvl)
@@ -316,7 +273,7 @@ public class ExampleClass : MonoBehaviour
         {
             case WeatherStates.SunnyWeather:
 
-                crtTerrain.materialTemplate = crtMaterial;
+                //crtTerrain.materialTemplate = crtMaterial; //modificare sol
                 
                 sun.SetActive(true); //activarea gameobject-ului 
                 
@@ -328,6 +285,9 @@ public class ExampleClass : MonoBehaviour
                 //setarea treptata a intensitatii luminii
                 //in acest caz se doreste obtinerea intensitatii maxime a luminii
                 setLightLevel(maxIntensity);
+
+                //setare skyboxului inconjurator adecvat
+                RenderSettings.skybox = SkyboxSunny;
 
                 //setarea treptata a volumului provenit de la o stare anterioara si
                 //setarea clipului audio adecvat
