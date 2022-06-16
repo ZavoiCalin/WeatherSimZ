@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(AudioSource))]
-//[RequireComponent(typeof(Light))]
 
-public class DynamicWeatherZ : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+
+public class DynamicWeatherZ : ChangeSoil
 {
     #region fields
 
-    public WeatherStates currentWeatherState; //starea curenta _weatherState
+    public WeatherStates currentWeatherState; //starea curenta 
 
     public enum WeatherStates{                  //toate starile posibile
         InitialWeather,
@@ -24,11 +24,9 @@ public class DynamicWeatherZ : MonoBehaviour
     };
 
     private int weatherTotal=WeatherStates.GetNames(typeof(WeatherStates)).Length; //numarul de stari de vreme din enum
-    private int weatherNum; //_switchWeather
+    [SerializeField] private int weatherNum; 
 
-    private Transform systemPosition;
-
-    [SerializeField] private float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
+    [SerializeField] protected float switchWeatherTimer=0f, resetWeatherTimer=10f; //timere de schimbare
     
     
     [SerializeField] private GameObject sunnyCloudsParticles, 
@@ -38,13 +36,11 @@ public class DynamicWeatherZ : MonoBehaviour
     rainyParticles; 
     [SerializeField] private GameObject [] weatherParticlesTotal;
 
-    [SerializeField] private GameObject sun, thunder, player;
+    [SerializeField] private GameObject sun, thunder, player, ripples;
 
     [SerializeField] private Light crtLight;
 
-    [SerializeField] private Terrain crtTerrain;
-
-    [SerializeField] private Material crtMaterial, SkyboxSunny, SkyboxMist, SkyboxOvercast, SkyboxSnowy, SkyboxRainy, SkyboxThunder;
+    [SerializeField] private Material SkyboxSunny, SkyboxMist, SkyboxOvercast, SkyboxSnowy, SkyboxRainy, SkyboxThunder;
 
     [SerializeField] private float audioFadeTime = 0.5f; //rata de modificare volum audio
     [SerializeField] private AudioClip sunnyAudio, mistAudio, overcastAudio, snowyAudio, rainyAudio, thunderAudio;
@@ -60,12 +56,10 @@ public class DynamicWeatherZ : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject system = GameObject.FindGameObjectWithTag("System");
-        systemPosition = system.transform;
-
         addAllParticles();
 
         StartCoroutine(switchWeather());
+        StartCoroutine(switchSoil());
     }
 
     // Update is called once per frame
@@ -74,29 +68,8 @@ public class DynamicWeatherZ : MonoBehaviour
 
         updateTimers();
 
-        //origin.transform.position = new Vector3(player.transform.position.x + 300f, player.transform.position.y + 300f, player.transform.position.z + 300f);
     }
 
-    // Instantiates respawnPrefab at the location
-// of all game objects tagged "Respawn".
-
-/*
-public class ExampleClass : MonoBehaviour
-{
-    public GameObject respawnPrefab;
-    public GameObject[] respawns;
-    void Start()
-    {
-        if (respawns == null)
-            respawns = GameObject.FindGameObjectsWithTag("Respawn");
-
-        foreach (GameObject respawn in respawns)
-        {
-            Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
-        }
-    }
-}
-*/
     public void addAllParticles() //adauga toate sistemele de particule in lista
     {
         if(weatherParticlesTotal == null)
@@ -104,16 +77,6 @@ public class ExampleClass : MonoBehaviour
             weatherParticlesTotal = GameObject.FindGameObjectsWithTag("Particles");
         }
     }
-
-
-    /*
-    public void updateOrigin()
-    {
-        bool moved = player.transform.hasChanged;
-        
-    }
-
-    */
 
     public void setLightLevel(float lvl)
     {
@@ -199,13 +162,11 @@ public class ExampleClass : MonoBehaviour
         }
     }
 
-    //implementare random
-
     #region initializare_random
 
     public void initializeWeather()
     {
-        Debug.Log("Initializing weather");
+        //Debug.Log("Initializing weather");
 
         weatherNum = Random.Range(0, weatherTotal);
 
@@ -216,6 +177,7 @@ public class ExampleClass : MonoBehaviour
 
         sun.SetActive(false); ////dezactiveaza toate gameobject-urile
         thunder.SetActive(false);
+        ripples.SetActive(false);
 
         setLightLevel(minIntensity);
 
@@ -265,22 +227,23 @@ public class ExampleClass : MonoBehaviour
 
     public void activateWeather(WeatherStates selectedWeather)
     {
-        Debug.Log("Activating "+ selectedWeather);
+
+        if(RenderSettings.fog)
+        {
+            RenderSettings.fog = false;
+        }
+
+        //Debug.Log("Activating "+ selectedWeather);
 
         //weatherParticlesTotal[weatherNum].Play(); cand era lista de ParticlesSystem
 
         switch(selectedWeather) 
         {
             case WeatherStates.SunnyWeather:
-
-                //crtTerrain.materialTemplate = crtMaterial; //modificare sol
                 
-                sun.SetActive(true); //activarea gameobject-ului 
+                sun.SetActive(true); //activarea gameobject-ului ce reprezinta soarele si copiii (child gameobjects) reprezentati de efectele aditionale ce apar la runtime si stralucirea (glow) acestuia
                 
                 sunnyCloudsParticles.SetActive(true); //activarea sistemelor de particule adecvate
-                //activate sun gameObject
-
-                //sun.SetActive(true);
 
                 //setarea treptata a intensitatii luminii
                 //in acest caz se doreste obtinerea intensitatii maxime a luminii
@@ -297,22 +260,31 @@ public class ExampleClass : MonoBehaviour
 
             case WeatherStates.MistWeather:
 
-                RenderSettings.fogColor = Color.Lerp(Color.grey, darkGrey, Time.deltaTime * fogChangeTime); //interpolarea celor doua intensitati diferite de gri
-                RenderSettings.fog = true;
-                RenderSettings.fogMode = FogMode.ExponentialSquared; //activarea cetii implementate in Unity
-                RenderSettings.fogDensity = 0.05f;
+                if(!RenderSettings.fog)
+                {
+
+                    RenderSettings.fogColor = Color.Lerp(Color.grey, darkGrey, Time.deltaTime * fogChangeTime); //interpolarea celor doua intensitati diferite de gri
+                    RenderSettings.fog = true;
+                    RenderSettings.fogMode = FogMode.ExponentialSquared; //activarea cetii implementate in Unity
+                    RenderSettings.fogDensity = 0.05f;
                 
+                }
 
                 mistParticles.SetActive(true);
                 setLightLevel(mistIntensity);
+
+                RenderSettings.skybox = SkyboxMist;
+
                 setAudioClip(mistAudio);
                 break;
 
             case WeatherStates.OvercastWeather:
 
-                overcastParticles.SetActive(true);
-                //activate overcast clouds
+                overcastParticles.SetActive(true);//activarea norilor gri
                 setLightLevel(overcastIntensity);
+
+                RenderSettings.skybox = SkyboxMist;
+                
                 setAudioClip(overcastAudio);
                 break;
 
@@ -320,24 +292,36 @@ public class ExampleClass : MonoBehaviour
                 
                 snowyParticles.SetActive(true);
                 setLightLevel(snowIntensity);
+
+                RenderSettings.skybox = SkyboxSnowy;
+
                 setAudioClip(snowyAudio);
                 break;
 
             case WeatherStates.RainyWeather:
 
                 rainyParticles.SetActive(true);
-                //activate overcast clouds
+                overcastParticles.SetActive(true);
+                ripples.SetActive(true);
                 setLightLevel(minIntensity);
+
+                RenderSettings.skybox = SkyboxRainy;
+
                 setAudioClip(rainyAudio);
                 break;
 
             case WeatherStates.ThunderWeather:
                
                 rainyParticles.SetActive(true);
-                thunder.SetActive(true);
-                //activate thunder gameObject 
-                //thunder.SetActive(true);
+                overcastParticles.SetActive(true);
+                ripples.SetActive(true);
+                thunder.SetActive(true);  //activarea fulgerului in fata FPS 
+
+            
                 setLightLevel(minIntensity);
+
+                RenderSettings.skybox = SkyboxThunder;
+
                 setAudioClip(thunderAudio);
                 break;
 
@@ -345,11 +329,11 @@ public class ExampleClass : MonoBehaviour
                 
                 overcastParticles.SetActive(true);
                 thunder.SetActive(true);
-                //controlEmissions(rainyParticles, false);
-                //activate thunder gameObject
-                //thunder.SetActive(true);
-                //activate overcast clouds
+                
                 setLightLevel(minIntensity);
+
+                RenderSettings.skybox = SkyboxThunder;
+
                 setAudioClip(thunderAudio);
                 break;
         }   
@@ -376,6 +360,7 @@ public class ExampleClass : MonoBehaviour
         if(switchWeatherTimer==0)
         {
             currentWeatherState=WeatherStates.InitialWeather;
+            currentSoil = SoilStates.Initial;
         }
 
         switchWeatherTimer=resetWeatherTimer; //se reinitializeaza valoarea 
@@ -386,34 +371,4 @@ public class ExampleClass : MonoBehaviour
 
 #endregion
 
-//Idee setare texturi sol
-/* 
-private float[,,] alphaData;
-    private TerrainData tData;
-    private float percentage;
-   
-    private const int DESERT    = 0; //These numbers depend on the order in which
-    private const int GRASS     = 1; //the textures are loaded onto the terrain
-   
-    void Start() {
-        tData = Terrain.activeTerrain.terrainData;
-       
-        alphaData = tData.GetAlphamaps(0, 0, tData.alphamapWidth, tData.alphamapHeight);
-       
-        SetPercentage(0);
-    }
-   
-    public void SetPercentage(double perc){
-        percentage = (float) perc /100f;
-       
-        for(int y=0; y<tData.alphamapHeight; y++){
-            for(int x = 0; x < tData.alphamapWidth; x++){
-                alphaData[x, y, DESERT] = 1 - percentage;
-                alphaData[x, y, GRASS] = percentage;
-            }
-        }
-       
-        tData.SetAlphamaps(0, 0, alphaData);
-    }
-    */
     

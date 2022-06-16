@@ -46,6 +46,7 @@ using UnityEngine;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 
 public class RuntimeText: MonoBehaviour
@@ -67,10 +68,21 @@ public class RuntimeText: MonoBehaviour
    public static void ReadString()
    {
        List<string> dateTotal = new List<string>();
-       string path = "D:/EGIOC/Prototype_Weather_Simulator/Assets/Files/data.txt";
+       string path = "D:\\EGIOC\\Prototype_Weather_Simulator";
        //Read the text from directly from the test.txt file
+
+       var directory = new DirectoryInfo("D:\\EGIOC\\Prototype_Weather_Simulator");//android
+       var myFile = directory.GetFiles()
+             .OrderByDescending(f => f.LastWriteTime)
+             .First();
+        myFile.ToString();
+
+        path += myFile;
+
        StreamReader reader = new StreamReader(path);
        Debug.Log(reader.ReadToEnd());
+
+       
 
        while (!reader.EndOfStream)
        {
