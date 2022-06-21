@@ -17,19 +17,18 @@ public class ReadData : MonoBehaviour
     public static int [] firstNr = new int[6];
     public static int [] secondNr = new int[6];
 
+    public static bool ended = false;
+
     IEnumerator delayRead()
     {
-        while(true){
-
+        
+        
         readSetOfData();
         
         yield return new WaitForSeconds(5);
 
-        readSetOfData();
-
-            yield return null;
-        }
-
+            if(ended)
+                Debug.Log("Done with all data");
     }
 
 
@@ -47,10 +46,9 @@ public class ReadData : MonoBehaviour
        while (!reader.EndOfStream)
        {
        
-       var line = reader.ReadLine();
        set++;
-
-
+       var line = reader.ReadLine();
+       
        var values = line.Split(',');
 
         for(var i = 0; i < 6; i++)
@@ -58,33 +56,55 @@ public class ReadData : MonoBehaviour
             
             if(set == 1){
                 firstData[i] = values[i];
-                Debug.Log(firstData[i]);
+                
             }
 
             if(set == 2){
            
                 secondData[i] = values[i];
-
-                Debug.Log(secondData[i]);    
+  
               
             }
 
-            if(set >= 3)
+            if(set == 3)
             {
+                
                 firstNr[i] = Int32.Parse(firstData[i]);
                 secondNr[i] = Int32.Parse(secondData[i]);
 
-                diffData[i] = firstNr[i] - secondNr[i];
-                Debug.Log(diffData[i] + " = " + firstData[i] + " - " + secondData[i]);
+                diffData[i] = secondNr[i] - firstNr[i];
+                Debug.Log(diffData[i] + " = " + secondData[i] + " - " + firstData[i]);
+
+                
 
                 firstData[i] = secondData[i];
                 secondData[i] = values[i];
                 
             }
 
-            //Debug.Log(values[i]);
-        }
+            if(set >= 4)
+            {
+                firstData[i] = secondData[i];
+                secondData[i] = values[i];
 
+                firstNr[i] = Int32.Parse(firstData[i]);
+                secondNr[i] = Int32.Parse(secondData[i]);
+
+                diffData[i] = secondNr[i] - firstNr[i];
+                Debug.Log(diffData[i] + " = " + secondData[i] + " - " + firstData[i]);
+            }
+
+
+
+            /*
+            firstData[i] = secondData[i];
+            secondData[i] = values[i];*/
+
+            //Debug.Log(values[i]);
+
+            
+        }
+            ended = true;
        }
 
        reader.Close();
