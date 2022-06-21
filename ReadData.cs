@@ -1,104 +1,98 @@
-/*
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-
-
-public class ReadData : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-
-        using(var reader = new StreamReader(@"D:\EGIOC\Prototype_Weather_Simulator\Assets\Files"))
-        {
-            List<string> listA = new List<string>();
-            
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
-
-                listA.Add(values[0]);
-            }
-        }
-
-        /*
-        foreach(var crt in listA)
-        {
-            Debug.log(crt);
-        }
-        
-    }
-    
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
-*/
-
 using UnityEngine;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 
-public class RuntimeText: MonoBehaviour
+public class ReadData : MonoBehaviour
 {
-    /*
-   public static void WriteString()
-   {
-       string path = Application.persistentDataPath + "/data.txt";
-       //Write some text to the test.txt file
-       StreamWriter writer = new StreamWriter(path, true);
-       writer.WriteLine("Test");
-        writer.Close();
-       StreamReader reader = new StreamReader(path);
-       //Print the text from the file
-       Debug.Log(reader.ReadToEnd());
-       reader.Close();
+    public static string [] firstData = new string[6];
+    public static string [] secondData = new string[6];
+    public static Int32 [] diffData = new Int32[6];
+
+    public static int set = 0;
+
+    public static int [] firstNr = new int[6];
+    public static int [] secondNr = new int[6];
+
+    IEnumerator delayRead()
+    {
+        while(true){
+
+        readSetOfData();
+        
+        yield return new WaitForSeconds(5);
+
+        readSetOfData();
+
+            yield return null;
+        }
+
     }
-    */
-   public static void ReadString()
+
+
+   
+   public static void readSetOfData()
    {
-       List<string> dateTotal = new List<string>();
-       string path = "D:\\EGIOC\\Prototype_Weather_Simulator";
-       //Read the text from directly from the test.txt file
-
-       var directory = new DirectoryInfo("D:\\EGIOC\\Prototype_Weather_Simulator");//android
-       var myFile = directory.GetFiles()
-             .OrderByDescending(f => f.LastWriteTime)
-             .First();
-        myFile.ToString();
-
-        path += myFile;
-
-       StreamReader reader = new StreamReader(path);
-       Debug.Log(reader.ReadToEnd());
-
        
+       string pathC = Application.dataPath + "/Files/serial.txt"; //computer
+       //string pathA = Application.persistentDataPath + "SERIAL_20220621_154414.txt";//trebuie fix dupa ce am dat drumu la log in terminal
+      
+
+       StreamReader reader = new StreamReader(pathC);
+       //Debug.Log(reader.ReadToEnd());
 
        while (!reader.EndOfStream)
        {
+       
        var line = reader.ReadLine();
+       set++;
+
+
        var values = line.Split(',');
-       dateTotal.Add(values[0]); //AH
-       dateTotal.Add(values[1]); //T
-       dateTotal.Add(values[2]); //SM
-       dateTotal.Add(values[3]); //RV
-       dateTotal.Add(values[4]); //AP
+
+        for(var i = 0; i < 6; i++)
+        {
+            
+            if(set == 1){
+                firstData[i] = values[i];
+                Debug.Log(firstData[i]);
+            }
+
+            if(set == 2){
+           
+                secondData[i] = values[i];
+
+                Debug.Log(secondData[i]);    
+              
+            }
+
+            if(set >= 3)
+            {
+                firstNr[i] = Int32.Parse(firstData[i]);
+                secondNr[i] = Int32.Parse(secondData[i]);
+
+                diffData[i] = firstNr[i] - secondNr[i];
+                Debug.Log(diffData[i] + " = " + firstData[i] + " - " + secondData[i]);
+
+                firstData[i] = secondData[i];
+                secondData[i] = values[i];
+                
+            }
+
+            //Debug.Log(values[i]);
+        }
+
        }
+
        reader.Close();
+        
    }
 
    void Start() {
-       ReadString();
+        StartCoroutine(delayRead());
        
    }
 }

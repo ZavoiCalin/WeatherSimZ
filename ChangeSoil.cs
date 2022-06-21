@@ -2,19 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeSoil : Timer
+public class ChangeSoil : MonoBehaviour
 {
     [SerializeField] private Material WayTooWetMat, WetMat, DryMat, WayTooDryMat;
     [SerializeField] private Terrain crtTerrain;
 
     private int soilTotal=SoilStates.GetNames(typeof(SoilStates)).Length; //numarul de stari de sol din enum
     private int soilNum;
+
+    public SoilStates currentSoil;
+
+    
+    public enum SoilStates{
+        Initial,
+        WayTooWet,
+        Wet,
+        Dry,
+        WayTooDry
+    }
  
 
     public IEnumerator switchSoil(){
         while(true)
         {
-            switch(currentSoil)   
+            switch(currentSoil)
             {
                 case SoilStates.Initial:
                     initializeSoil();
@@ -75,7 +86,7 @@ public class ChangeSoil : Timer
 
     public void activateSoil(SoilStates selectedSoil)
     {
-        Debug.Log("Activating "+ selectedSoil);
+        
 
         switch(selectedSoil)
         {

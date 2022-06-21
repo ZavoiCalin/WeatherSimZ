@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Mouse_Look : MonoBehaviour
 {
-    public float mouseSensitivity = 800f;
+    public float mouseSensitivity = 600f;
     public Transform playerBody;
     float xRotation = 0f;
     
@@ -17,7 +17,7 @@ public class Mouse_Look : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 15f); //rotatia pe axa este blocata pentru a nu se putea vedea in interiorul personajului
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); //rotatia in jurul axei se reinitializeaza pentru celelalte
         playerBody.Rotate(Vector3.up * mouseX);
     }
 
